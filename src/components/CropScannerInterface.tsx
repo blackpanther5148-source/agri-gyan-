@@ -3,9 +3,32 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Camera, Scan, Leaf, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
+interface Disease {
+  name: string;
+  probability: number;
+  severity: string;
+  treatment: string;
+}
+
+interface Characteristic {
+  name: string;
+  value: string;
+  score: number;
+}
+
+interface ScanResults {
+  cropType: string;
+  healthScore: number;
+  growthStage: string;
+  confidence: number;
+  diseases: Disease[];
+  recommendations: string[];
+  characteristics: Characteristic[];
+}
+
 const CropScannerInterface: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
-  const [scanResults, setScanResults] = useState<any>(null);
+  const [scanResults, setScanResults] = useState<ScanResults | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);

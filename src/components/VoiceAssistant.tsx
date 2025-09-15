@@ -3,6 +3,47 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Volume2, VolumeX, Languages, MessageCircle } from 'lucide-react';
 
+// TypeScript declarations for Web Speech API
+interface SpeechRecognitionEvent {
+  results: {
+    [key: number]: {
+      [key: number]: {
+        transcript: string;
+      };
+      isFinal: boolean;
+    };
+    length: number;
+  };
+  resultIndex: number;
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onstart: (() => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+}
+
+interface SpeechRecognitionConstructor {
+  new(): SpeechRecognition;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition: SpeechRecognitionConstructor;
+    webkitSpeechRecognition: SpeechRecognitionConstructor;
+  }
+}
+
 const VoiceAssistant = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -10,7 +51,7 @@ const VoiceAssistant = () => {
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState('');
   const [isConnected, setIsConnected] = useState(false);
-  const recognitionRef = useRef(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const languages = [
     { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
@@ -35,7 +76,7 @@ const VoiceAssistant = () => {
   useEffect(() => {
     // Initialize speech recognition if available
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
@@ -89,7 +130,7 @@ const VoiceAssistant = () => {
     }
   };
 
-  const handleVoiceQuery = async (query) => {
+  const handleVoiceQuery = async (query: string) => {
     try {
       // Simulate AI response based on language
       const responses = {
@@ -117,7 +158,7 @@ const VoiceAssistant = () => {
     }
   };
 
-  const speakSampleQuestion = (question) => {
+  const speakSampleQuestion = (question: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(question);
       utterance.lang = selectedLanguage;

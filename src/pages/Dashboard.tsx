@@ -5,11 +5,40 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
+interface Profile {
+  user_id: string;
+  full_name: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CropRecommendation {
+  id: string;
+  user_id: string;
+  crop_name: string;
+  recommendation_text: string;
+  confidence_score: number;
+  created_at: string;
+}
+
+interface DiseaseDetection {
+  id: string;
+  user_id: string;
+  image_url: string;
+  disease_name: string;
+  confidence_score: number;
+  treatment_suggestion: string;
+  created_at: string;
+}
+
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<any>(null);
-  const [recentRecommendations, setRecentRecommendations] = useState<any[]>([]);
-  const [recentDetections, setRecentDetections] = useState<any[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [recentRecommendations, setRecentRecommendations] = useState<CropRecommendation[]>([]);
+  const [recentDetections, setRecentDetections] = useState<DiseaseDetection[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -6,10 +6,24 @@ import { Mic, MicOff, Volume2, VolumeX, Globe, Brain, MessageCircle } from 'luci
 import { useToast } from '@/hooks/use-toast';
 
 // TypeScript declarations for Web Speech API
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+}
+
+interface SpeechRecognitionConstructor {
+  new(): SpeechRecognition;
+}
+
 declare global {
   interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
+    SpeechRecognition: SpeechRecognitionConstructor;
+    webkitSpeechRecognition: SpeechRecognitionConstructor;
   }
 }
 
@@ -39,7 +53,7 @@ const RealTimeVoiceAssistant = () => {
   const [response, setResponse] = useState('');
   const [conversation, setConversation] = useState<Array<{type: 'user' | 'assistant', text: string, timestamp: Date}>>([]);
   
-  const recognition = useRef<any>(null);
+  const recognition = useRef<SpeechRecognition | null>(null);
   const synthesis = useRef<SpeechSynthesis | null>(null);
   const { toast } = useToast();
 

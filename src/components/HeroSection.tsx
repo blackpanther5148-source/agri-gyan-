@@ -3,9 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Zap, TrendingUp, Leaf, Microscope, CloudRain, BarChart3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-interface HeroSectionProps {}
-
-const HeroSection: React.FC<HeroSectionProps> = () => {
+const HeroSection: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Green Gradient Background inspired by uploaded image */}
