@@ -6,13 +6,43 @@ import { useToast } from '@/hooks/use-toast';
 import { Camera, Upload, Zap, AlertTriangle, CheckCircle, Microscope, Brain, Scan } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
+interface DiseaseInfo {
+  name: string;
+  confidence: number;
+  severity: string;
+  treatments: string[];
+  prevention: string[];
+  description: string;
+  cause: string;
+  spreads: string;
+  weatherConditions: string;
+}
+
+interface ScanResult {
+  disease: DiseaseInfo;
+  plantHealth: number;
+  riskLevel: string;
+  additionalInfo: string;
+  recommendations: string[];
+}
+
+interface RecentScan {
+  id: string;
+  user_id: string;
+  image_url: string;
+  disease_name: string;
+  confidence_score: number;
+  treatment_suggestion: string;
+  created_at: string;
+}
+
 const DiseaseScanner = () => {
   const [user, setUser] = useState<User | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [scanning, setScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<any>(null);
-  const [recentScans, setRecentScans] = useState<any[]>([]);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [recentScans, setRecentScans] = useState<RecentScan[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -243,10 +273,11 @@ const DiseaseScanner = () => {
         title: "AI Analysis Complete!",
         description: `${detectedDisease.name} detected with ${Math.round(detectedDisease.confidence * 100)}% confidence. Check detailed treatment plan.`,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       toast({
         title: "Error",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
