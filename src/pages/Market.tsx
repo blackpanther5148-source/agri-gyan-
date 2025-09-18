@@ -25,12 +25,22 @@ import {
   Star
 } from 'lucide-react';
 
+interface PriceAlert {
+  id: string;
+  crop: string;
+  targetPrice: number;
+  currentPrice: number;
+  type: 'above' | 'below';
+  created: Date;
+  mandi: string;
+}
+
 const Market = () => {
   const [selectedState, setSelectedState] = useState('maharashtra');
   const [selectedCrop, setSelectedCrop] = useState('rice');
   const [liveUpdates, setLiveUpdates] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [priceAlerts, setPriceAlerts] = useState<any[]>([]);
+  const [priceAlerts, setPriceAlerts] = useState<PriceAlert[]>([]);
   const [userLocation, setUserLocation] = useState('Pune, Maharashtra');
   const [showPriceChart, setShowPriceChart] = useState(false);
   const [marketVolatility, setMarketVolatility] = useState(2.8);
