@@ -34,6 +34,7 @@ const Navbar = () => {
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/soil-analysis', label: 'Soil Analysis', icon: '🌱' },
     { href: '/disease-scanner', label: 'Disease Scanner', icon: '🔍' },
+    { href: '/ai-assistant', label: 'AI Assistant', icon: '🤖' },
     { href: '/weather-analytics', label: 'Weather', icon: '🌤️' },
     { href: '/market', label: 'Market', icon: '📈' },
   ];
